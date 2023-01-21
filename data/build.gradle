@@ -1,0 +1,10 @@
+version = '0.0.1'
+group = 'pjatk.s24271.jaz301.data'
+
+bootJar {
+    enabled = false
+}
+
+dependencies {
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}

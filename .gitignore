@@ -1,0 +1,8 @@
+/app/build/
+/data/build/
+/api/build/
+/gradle/
+/gradlew
+/gradlew.bat
+/.idea
+/.gradle

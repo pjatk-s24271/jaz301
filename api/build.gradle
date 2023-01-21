@@ -1,0 +1,12 @@
+plugins {
+    id 'war'
+    id 'java'
+}
+
+version = '0.0.1'
+group = 'pjatk.s24271.jaz301.api'
+
+dependencies {
+    implementation project(":data")
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+}
