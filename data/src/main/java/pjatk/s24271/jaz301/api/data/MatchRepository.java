@@ -3,12 +3,10 @@ package pjatk.s24271.jaz301.api.data;
 import jakarta.persistence.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import pjatk.s24271.jaz301.api.data.objects.MatchDAO;
 import pjatk.s24271.jaz301.api.data.objects.SummonerDAO;
 
-import java.util.List;
-
 @Repository
-@Table(name = "summoner")
-public interface SummonerRepository extends JpaRepository<SummonerDAO, String> {
-    List<SummonerDAO> findByPuuid(String puuid);
+@Table(name="match")
+public interface MatchRepository extends JpaRepository<MatchDAO, String> {
 }

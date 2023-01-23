@@ -1,4 +1,4 @@
-package pjatk.s24271.jaz301.api.data;
+package pjatk.s24271.jaz301.api.data.objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

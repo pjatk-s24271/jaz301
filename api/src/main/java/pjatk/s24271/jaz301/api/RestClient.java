@@ -3,8 +3,12 @@ package pjatk.s24271.jaz301.api;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import pjatk.s24271.jaz301.api.objects.ChampionDTO;
+import pjatk.s24271.jaz301.api.objects.MatchDTO;
+import pjatk.s24271.jaz301.api.objects.SummonerDTO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static pjatk.s24271.jaz301.api.RestClient.PlatformHost.*;
@@ -50,12 +54,20 @@ public class RestClient {
         return rest.getForObject(url, SummonerDTO.class);
     }
 
+    public MatchDTO getMatch() {
+
+    }
+
+    public List<ChampionDTO> getRotation() {
+        
+    }
+
     private String url(PlatformHost h, String s) {
-        return "https://" + platforms.get(h) + s + "?api_key=RGAPI-c4719728-4f07-4da1-a04d-e702eaaacbbe";
+        return "https://" + platforms.get(h) + s + "?api_key=RGAPI-ff2c023d-eb17-40cf-9bfc-06d132ee28ea";
     }
 
     private String url(RegionHost h, String s) {
-        return "https://" + regions.get(h) + s + "?api_key=RGAPI-c4719728-4f07-4da1-a04d-e702eaaacbbe";
+        return "https://" + regions.get(h) + s + "?api_key=RGAPI-ff2c023d-eb17-40cf-9bfc-06d132ee28ea";
     }
 
     enum PlatformHost {BR1, EUN1, EUW1, JP1, KR, LA1, LA2, NA1, OC1, TR1, RU, PH2, SG2, TH2, TW2, VN2}

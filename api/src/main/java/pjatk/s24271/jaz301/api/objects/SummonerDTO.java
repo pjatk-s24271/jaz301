@@ -1,4 +1,4 @@
-package pjatk.s24271.jaz301.api;
+package pjatk.s24271.jaz301.api.objects;
 
 import java.math.BigInteger;
 
