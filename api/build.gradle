@@ -9,4 +9,5 @@ group = 'pjatk.s24271.jaz301.api'
 dependencies {
     implementation project(":data")
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
