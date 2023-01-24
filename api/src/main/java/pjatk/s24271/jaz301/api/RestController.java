@@ -61,7 +61,7 @@ public class RestController {
 
     @GetMapping(mData + "match")
     public MatchDTO matchData() {
-        return matchRepo.findById();
+        return new MatchDTO();
     }
 
     @GetMapping(mClient + "match")
@@ -84,6 +84,6 @@ public class RestController {
 
     @GetMapping(mClient + "rotation")
     public List<ChampionDTO> rotationClient() {
-        return client.getRotation();
+        return List.of();
     }
 }

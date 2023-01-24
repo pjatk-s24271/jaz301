@@ -18,7 +18,6 @@ import java.util.Map;
 
 import static pjatk.s24271.jaz301.api.RestClient.PlatformHost.*;
 import static pjatk.s24271.jaz301.api.RestClient.RegionHost.*;
-import static pjatk.s24271.jaz301.api.objects.UtilsKt.filterChampions;
 
 @Component
 public class RestClient {
@@ -93,8 +92,9 @@ public class RestClient {
                 }
         );
 
-        if (info != null) return filterChampions(response.getBody(), info.freeChampionIds);
-        else return null;
+        //if (info != null) return filterChampions(response.getBody(), info.freeChampionIds);
+        //else return null;
+        return null;
     }
 
     private String url(PlatformHost h, String s) {
