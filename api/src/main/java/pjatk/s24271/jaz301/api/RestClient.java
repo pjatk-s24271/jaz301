@@ -6,18 +6,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import pjatk.s24271.jaz301.api.objects.ChampionDTO;
-import pjatk.s24271.jaz301.api.objects.ChampionInfoDTO;
-import pjatk.s24271.jaz301.api.objects.MatchDTO;
-import pjatk.s24271.jaz301.api.objects.SummonerDTO;
-
+import pjatk.s24271.jaz301.api.objects.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 import static pjatk.s24271.jaz301.api.RestClient.PlatformHost.*;
 import static pjatk.s24271.jaz301.api.RestClient.RegionHost.*;
+import pjatk.s24271.jaz301.api.objects.MatchRiotDTO.InfoDto.ParticipantDto;
 
 @Component
 public class RestClient {
@@ -73,7 +70,20 @@ public class RestClient {
         if (ids != null) {
             List<MatchDTO> matches = new ArrayList<>();
             String url = url(region, "/lol/match/v5/matches/");
-            for (String id : ids) matches.add(rest.getForObject(url + id, MatchDTO.class));
+            for (String id : ids) {
+                MatchRiotDTO match = rest.getForObject(url + id, MatchRiotDTO.class);
+                ParticipantDto participant;
+                if (match == null) continue;
+                matches.add(new MatchDTO(
+                    match.puuid,
+                    region,
+                    match.metadata.matchId,
+                    match.assists,
+                    match.deaths,
+                    match.info.participants,
+                    match.startTimestamp
+                ));
+            }
 
             return matches;
         } else return null;
@@ -92,17 +102,18 @@ public class RestClient {
                 }
         );
 
-        //if (info != null) return filterChampions(response.getBody(), info.freeChampionIds);
-        //else return null;
-        return null;
+        if (info != null && response.getBody() != null)
+            return response.getBody().stream().filter((ChampionDTO champ) ->
+                    info.freeChampionKeys.contains(champ.key)).collect(Collectors.toList());
+        else return null;
     }
 
     private String url(PlatformHost h, String s) {
-        return "https://" + platforms.get(h) + s + "?api_key=RGAPI-ff2c023d-eb17-40cf-9bfc-06d132ee28ea";
+        return "https://" + platforms.get(h) + s + "?api_key=RGAPI-4d8b34c9-f493-4f9f-b551-aabdf71cb87a";
     }
 
     private String url(RegionHost h, String s) {
-        return "https://" + regions.get(h) + s + "?api_key=RGAPI-ff2c023d-eb17-40cf-9bfc-06d132ee28ea";
+        return "https://" + regions.get(h) + s + "?api_key=RGAPI-4d8b34c9-f493-4f9f-b551-aabdf71cb87a";
     }
 
     enum PlatformHost {BR1, EUN1, EUW1, JP1, KR, LA1, LA2, NA1, OC1, TR1, RU, PH2, SG2, TH2, TW2, VN2}

@@ -7,5 +7,4 @@ bootJar {
 
 dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }

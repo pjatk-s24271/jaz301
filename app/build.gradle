@@ -9,6 +9,5 @@ group = 'pjatk.s24271.jaz301.app'
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
 }

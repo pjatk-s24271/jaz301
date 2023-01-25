@@ -2,7 +2,7 @@ package pjatk.s24271.jaz301.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import pjatk.s24271.jaz301.api.data.MatchRepository;
 import pjatk.s24271.jaz301.api.data.RotationRepository;
 import pjatk.s24271.jaz301.api.data.SummonerRepository;
@@ -36,8 +36,8 @@ public class RestController {
     final String mClient = "/api/client/";
 
 
-    @GetMapping(mData + "summoner")
-    public SummonerDTO summonerData(@RequestParam(value = "puuid") String puuid) {
+    @GetMapping(mData + "summoner/{puuid}")
+    public SummonerDTO summonerData(@PathVariable("puuid") String puuid) {
         SummonerDAO summoner = summonerRepo.findByPuuid(puuid).get(0);
         if (summoner != null) {
             return new SummonerDTO(
@@ -54,21 +54,24 @@ public class RestController {
         }
     }
 
-    @GetMapping(mClient + "summoner")
-    public SummonerDTO summonerClient(@RequestParam(value = "name") String name, @RequestParam(value = "platform") String platform) {
+    @GetMapping(mClient + "summoner/{platform}/{name}")
+    public SummonerDTO summonerClient(@PathVariable(value = "name") String name, @PathVariable(value = "platform") String platform) {
         return client.getSummoner(name, RestClient.PlatformHost.valueOf(platform));
     }
 
     @GetMapping(mData + "match")
-    public MatchDTO matchData() {
+    public MatchDTO matchData(
+            @PathVariable(value = "region") String region,
+            @PathVariable(value = "puuid") String puuid,
+            @PathVariable(value = "count") int count) {
         return new MatchDTO();
     }
 
-    @GetMapping(mClient + "match")
+    @GetMapping(mClient + "match/{region}/{puuid}/{count}")
     public List<MatchDTO> matchClient(
-            @RequestParam(value = "region") String region,
-            @RequestParam(value = "puuid") String puuid,
-            @RequestParam(value = "count") int count
+            @PathVariable(value = "region") String region,
+            @PathVariable(value = "puuid") String puuid,
+            @PathVariable(value = "count") int count
     ) {
         return client.getMatches(RestClient.RegionHost.valueOf(region), puuid, count);
     }
@@ -82,8 +85,8 @@ public class RestController {
         return champions;
     }
 
-    @GetMapping(mClient + "rotation")
-    public List<ChampionDTO> rotationClient() {
-        return List.of();
+    @GetMapping(mClient + "rotation/{platform}")
+    public List<ChampionDTO> rotationClient(@PathVariable(value = "platform") String platform) {
+        return client.getRotation(RestClient.PlatformHost.valueOf(platform));
     }
 }

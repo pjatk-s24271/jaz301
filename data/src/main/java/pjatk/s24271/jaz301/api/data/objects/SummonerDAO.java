@@ -1,18 +1,22 @@
 package pjatk.s24271.jaz301.api.data.objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.math.BigInteger;
 
 @Entity
 public class SummonerDAO {
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    public Long idd;
     public String accountId;
     public Integer profileIconId;
     public BigInteger revisionDate;
     public String name;
     public String id;
-    @Id
     public String puuid;
     public BigInteger summonerLevel;
 
