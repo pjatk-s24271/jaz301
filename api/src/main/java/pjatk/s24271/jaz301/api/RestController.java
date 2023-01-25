@@ -14,6 +14,7 @@ import pjatk.s24271.jaz301.api.objects.SummonerDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @org.springframework.web.bind.annotation.RestController
@@ -59,12 +60,22 @@ public class RestController {
         return client.getSummoner(name, RestClient.PlatformHost.valueOf(platform));
     }
 
-    @GetMapping(mData + "match")
-    public MatchDTO matchData(
+    @GetMapping(mData + "match/{region}/{puuid}/{count}")
+    public List<MatchDTO> matchData(
             @PathVariable(value = "region") String region,
             @PathVariable(value = "puuid") String puuid,
             @PathVariable(value = "count") int count) {
-        return new MatchDTO();
+        return matchRepo.getLast(region, puuid, count).stream().map(m ->
+                new MatchDTO(
+                        m.puuid,
+                        m.region,
+                        m.id,
+                        m.assists,
+                        m.deaths,
+                        m.kills,
+                        m.startTimestamp
+                )
+        ).collect(Collectors.toList());
     }
 
     @GetMapping(mClient + "match/{region}/{puuid}/{count}")
@@ -73,7 +84,7 @@ public class RestController {
             @PathVariable(value = "puuid") String puuid,
             @PathVariable(value = "count") int count
     ) {
-        return client.getMatches(RestClient.RegionHost.valueOf(region), puuid, count);
+        return client.getMatches(RestClient.RegionHost.valueOf(region), puuid, count); //todo
     }
 
     @GetMapping(mData + "rotation")
@@ -87,6 +98,6 @@ public class RestController {
 
     @GetMapping(mClient + "rotation/{platform}")
     public List<ChampionDTO> rotationClient(@PathVariable(value = "platform") String platform) {
-        return client.getRotation(RestClient.PlatformHost.valueOf(platform));
+        return client.getRotation(RestClient.PlatformHost.valueOf(platform)); //todo
     }
 }

@@ -3,18 +3,16 @@ package pjatk.s24271.jaz301.api;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import pjatk.s24271.jaz301.api.objects.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import pjatk.s24271.jaz301.api.objects.MatchRiotDTO.InfoDto.ParticipantDto;
+
+import java.util.*;
 import java.util.stream.Collectors;
+
 import static pjatk.s24271.jaz301.api.RestClient.PlatformHost.*;
 import static pjatk.s24271.jaz301.api.RestClient.RegionHost.*;
-import pjatk.s24271.jaz301.api.objects.MatchRiotDTO.InfoDto.ParticipantDto;
 
 @Component
 public class RestClient {
@@ -72,16 +70,20 @@ public class RestClient {
             String url = url(region, "/lol/match/v5/matches/");
             for (String id : ids) {
                 MatchRiotDTO match = rest.getForObject(url + id, MatchRiotDTO.class);
-                ParticipantDto participant;
                 if (match == null) continue;
+
+                ParticipantDto participant = match.info.participants.stream().filter(p ->
+                        Objects.equals(p.puuid, puuid)
+                ).toList().get(0);
+
                 matches.add(new MatchDTO(
-                    match.puuid,
-                    region,
-                    match.metadata.matchId,
-                    match.assists,
-                    match.deaths,
-                    match.info.participants,
-                    match.startTimestamp
+                        puuid,
+                        region.toString(),
+                        match.metadata.matchId,
+                        participant.assists,
+                        participant.deaths,
+                        participant.kills,
+                        match.info.gameStartTimestamp
                 ));
             }
 
@@ -92,18 +94,18 @@ public class RestClient {
     //Get current free champion rotation
     public List<ChampionDTO> getRotation(PlatformHost host) {
         String url = url(host, "/lol/platform/v3/champion-rotations");
+
+        //Get list of ids of free champions
         ChampionInfoDTO info = rest.getForObject(url, ChampionInfoDTO.class);
 
-        ResponseEntity<List<ChampionDTO>> response = rest.exchange(
+        //Get list of all champions
+        ChampionsDTO champions = rest.getForObject(
                 "http://ddragon.leagueoflegends.com/cdn/13.1.1/data/en_US/champion.json",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<ChampionDTO>>() {
-                }
+                ChampionsDTO.class
         );
 
-        if (info != null && response.getBody() != null)
-            return response.getBody().stream().filter((ChampionDTO champ) ->
+        if (info != null && champions != null)
+            return champions.data.stream().filter((ChampionDTO champ) ->
                     info.freeChampionKeys.contains(champ.key)).collect(Collectors.toList());
         else return null;
     }
