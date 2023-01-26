@@ -5,7 +5,7 @@ import java.util.List;
 public class ChampionInfoDTO {
     public int maxNewPlayerLevel;
     public List<Integer> freeChampionIdsForNewPlayers;
-    public List<Integer> freeChampionKeys;
+    public List<Integer> freeChampionIds;
 
     public ChampionInfoDTO() {
 
@@ -18,6 +18,6 @@ public class ChampionInfoDTO {
     ) {
         this.maxNewPlayerLevel = maxNewPlayerLevel;
         this.freeChampionIdsForNewPlayers = freeChampionIdsForNewPlayers;
-        this.freeChampionKeys = freeChampionIds;
+        this.freeChampionIds = freeChampionIds;
     }
 }

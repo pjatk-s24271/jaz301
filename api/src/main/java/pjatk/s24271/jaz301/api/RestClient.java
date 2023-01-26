@@ -1,5 +1,8 @@
 package pjatk.s24271.jaz301.api;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -98,16 +101,36 @@ public class RestClient {
         //Get list of ids of free champions
         ChampionInfoDTO info = rest.getForObject(url, ChampionInfoDTO.class);
 
-        //Get list of all champions
-        ChampionsDTO champions = rest.getForObject(
+        //Get json of champions
+        String json = rest.getForObject(
                 "http://ddragon.leagueoflegends.com/cdn/13.1.1/data/en_US/champion.json",
-                ChampionsDTO.class
+                String.class
         );
 
-        if (info != null && champions != null)
-            return champions.data.stream().filter((ChampionDTO champ) ->
-                    info.freeChampionKeys.contains(champ.key)).collect(Collectors.toList());
-        else return null;
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        List<ChampionDTO> champions = new ArrayList<>();
+
+        try {
+            Iterator<Map.Entry<String, JsonNode>> fields =
+                    mapper.readTree(json).at("/data").fields();
+
+            while (fields.hasNext()) {
+                Map.Entry<String, JsonNode> field = fields.next();
+                JsonNode value = field.getValue();
+                String text = value.toString();
+
+                champions.add(
+                        mapper.readValue(text, ChampionDTO.class)
+                );
+            }
+
+            if (info == null) return null;
+
+            return champions.stream().filter((ChampionDTO champ) ->
+                    info.freeChampionIds.contains(champ.key)).collect(Collectors.toList());
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     private String url(PlatformHost h, String s) {
