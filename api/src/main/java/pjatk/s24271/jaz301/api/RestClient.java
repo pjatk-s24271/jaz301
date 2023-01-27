@@ -8,6 +8,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import pjatk.s24271.jaz301.api.objects.*;
 import pjatk.s24271.jaz301.api.objects.MatchRiotDTO.InfoDto.ParticipantDto;
 
@@ -60,8 +61,9 @@ public class RestClient {
 
     //Return last {count} matches of summoner with {puuid}
     public List<MatchDTO> getMatches(RegionHost region, String puuid, int count) {
+
         List<String> ids = rest.exchange(
-                url(region, "/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=" + count),
+                url(region, "/lol/match/v5/matches/by-puuid/" + puuid + "/ids", "start", "0", "count", "" + count),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<String>>() {
@@ -70,9 +72,9 @@ public class RestClient {
 
         if (ids != null) {
             List<MatchDTO> matches = new ArrayList<>();
-            String url = url(region, "/lol/match/v5/matches/");
             for (String id : ids) {
-                MatchRiotDTO match = rest.getForObject(url + id, MatchRiotDTO.class);
+                String url = url(region, "/lol/match/v5/matches/" + id);
+                MatchRiotDTO match = rest.getForObject(url, MatchRiotDTO.class);
                 if (match == null) continue;
 
                 ParticipantDto participant = match.info.participants.stream().filter(p ->
@@ -133,12 +135,24 @@ public class RestClient {
         }
     }
 
-    private String url(PlatformHost h, String s) {
-        return "https://" + platforms.get(h) + s + "?api_key=RGAPI-4d8b34c9-f493-4f9f-b551-aabdf71cb87a";
+    private String url(PlatformHost host, String path, String... params) {
+        return _url("https://" + platforms.get(host) + path, params);
     }
 
-    private String url(RegionHost h, String s) {
-        return "https://" + regions.get(h) + s + "?api_key=RGAPI-4d8b34c9-f493-4f9f-b551-aabdf71cb87a";
+    private String url(RegionHost host, String path, String... params) {
+        return _url("https://" + regions.get(host) + path, params);
+    }
+
+    private String _url(String path, String... qp) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path)
+                .queryParam("api_key", "RGAPI-e7e5c5d7-94c6-4910-a41a-272198b73037");
+
+        List<String> params = Arrays.stream(qp).toList();
+        for (int i = 0; i < qp.length; i += 2) {
+            builder.queryParam(params.get(i), params.get(i + 1));
+        }
+
+        return builder.build().toUriString();
     }
 
     enum PlatformHost {BR1, EUN1, EUW1, JP1, KR, LA1, LA2, NA1, OC1, TR1, RU, PH2, SG2, TH2, TW2, VN2}
