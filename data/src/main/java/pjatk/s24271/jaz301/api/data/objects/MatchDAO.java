@@ -1,15 +1,15 @@
 package pjatk.s24271.jaz301.api.data.objects;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.math.BigInteger;
 
 @Entity
+@Table(name = "match")
 public class MatchDAO {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    public Long idd;
+    public int idd;
     public String puuid;
     public String region;
     public String id;
