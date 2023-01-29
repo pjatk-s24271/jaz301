@@ -2,14 +2,12 @@ package pjatk.s24271.jaz301.api.data.objects;
 
 import jakarta.persistence.*;
 
-import java.math.BigInteger;
-
 @Entity
 @Table(name = "rotation")
 public class ChampionDAO {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    public int idd;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long idd;
     public String name;
     public int key;
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @Table(name = "match")
-public interface MatchRepository extends JpaRepository<MatchDAO, String> {
-    @Query(value = "SELECT * FROM 'match' WHERE region = ':region' AND participantPuuid = ':puuid' LIMIT :count ORDER BY startTimestamp DESC", nativeQuery = true)
+public interface MatchRepository extends JpaRepository<MatchDAO, Long> {
+    @Query(value = "SELECT * FROM jaz.match WHERE region = :region AND puuid = :puuid ORDER BY start_timestamp DESC LIMIT :count", nativeQuery = true)
     List<MatchDAO> getLast(@Param("region") String region, @Param("puuid") String puuid, @Param("count") int count);
 }

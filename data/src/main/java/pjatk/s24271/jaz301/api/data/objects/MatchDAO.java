@@ -9,7 +9,7 @@ import java.math.BigInteger;
 public class MatchDAO {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    public int idd;
+    public Long idd;
     public String puuid;
     public String region;
     public String id;

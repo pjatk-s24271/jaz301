@@ -9,7 +9,7 @@ import java.math.BigInteger;
 public class SummonerDAO {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    public int idd;
+    public Long idd;
     public String accountId;
     public Integer profileIconId;
     public BigInteger revisionDate;

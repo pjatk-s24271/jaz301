@@ -22,6 +22,8 @@ import static pjatk.s24271.jaz301.api.RestClient.RegionHost.*;
 public class RestClient {
     RestTemplate rest;
 
+    String apiKey = "";
+
     static Map<RegionHost, String> regions = new HashMap<>();
     static Map<PlatformHost, String> platforms = new HashMap<>();
 
@@ -145,7 +147,7 @@ public class RestClient {
 
     private String _url(String path, String... qp) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path)
-                .queryParam("api_key", "RGAPI-e7e5c5d7-94c6-4910-a41a-272198b73037");
+                .queryParam("api_key", apiKey);
 
         List<String> params = Arrays.stream(qp).toList();
         for (int i = 0; i < qp.length; i += 2) {

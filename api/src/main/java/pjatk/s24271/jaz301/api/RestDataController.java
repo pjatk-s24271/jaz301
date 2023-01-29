@@ -1,20 +1,17 @@
 package pjatk.s24271.jaz301.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pjatk.s24271.jaz301.api.data.MatchRepository;
 import pjatk.s24271.jaz301.api.data.RotationRepository;
 import pjatk.s24271.jaz301.api.data.SummonerRepository;
 import pjatk.s24271.jaz301.api.data.objects.ChampionDAO;
+import pjatk.s24271.jaz301.api.data.objects.MatchDAO;
 import pjatk.s24271.jaz301.api.data.objects.SummonerDAO;
 import pjatk.s24271.jaz301.api.objects.ChampionDTO;
 import pjatk.s24271.jaz301.api.objects.MatchDTO;
 import pjatk.s24271.jaz301.api.objects.SummonerDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +29,16 @@ public class RestDataController {
     @Autowired
     MatchRepository matchRepo;
 
+    @Autowired
+    RestClient client;
+
 
     @GetMapping("summoner/{puuid}")
-    public SummonerDTO summonerData(@PathVariable("puuid") String puuid) {
-        SummonerDAO summoner = summonerRepo.findByPuuid(puuid).get(0);
+    public SummonerDTO summonerGet(@PathVariable("puuid") String puuid) {
+        List<SummonerDAO> list = summonerRepo.findByPuuid(puuid);
+        if (list.isEmpty()) return null;
+
+        SummonerDAO summoner = list.get(0);
         if (summoner != null) {
             return new SummonerDTO(
                     summoner.accountId,
@@ -46,13 +49,11 @@ public class RestDataController {
                     summoner.puuid,
                     summoner.summonerLevel
             );
-        } else {
-            return null;
-        }
+        } else return null;
     }
 
     @GetMapping("match/{region}/{puuid}/{count}")
-    public List<MatchDTO> matchData(
+    public List<MatchDTO> matchGet(
             @PathVariable(value = "region") String region,
             @PathVariable(value = "puuid") String puuid,
             @PathVariable(value = "count") int count) {
@@ -70,11 +71,52 @@ public class RestDataController {
     }
 
     @GetMapping("rotation")
-    public List<ChampionDTO> rotationData() {
+    public List<ChampionDTO> rotationGet() {
         List<ChampionDAO> champs = rotationRepo.findAll();
-        List<ChampionDTO> champions = new ArrayList<>();
+        return champs.stream().map(champ -> new ChampionDTO(champ.name, champ.key)).collect(Collectors.toList());
+    }
 
-        for (ChampionDAO champ : champs) champions.add(new ChampionDTO(champ.name, champ.key));
-        return champions;
+    @PostMapping("summoner/{platform}/{name}")
+    public void summonerPost(@PathVariable(value = "name") String name, @PathVariable(value = "platform") String platform) {
+        SummonerDTO s = client.getSummoner(name, RestClient.PlatformHost.valueOf(platform));
+        SummonerDAO summoner = new SummonerDAO(
+                s.accountId,
+                s.profileIconId,
+                s.revisionDate,
+                s.name,
+                s.id,
+                s.puuid,
+                s.summonerLevel
+        );
+        summonerRepo.save(summoner);
+    }
+
+    @PostMapping("match/{region}/{puuid}/{count}")
+    public void matchPost(
+            @PathVariable(value = "region") String region,
+            @PathVariable(value = "puuid") String puuid,
+            @PathVariable(value = "count") int count
+    ) {
+        List<MatchDTO> m = client.getMatches(RestClient.RegionHost.valueOf(region), puuid, count);
+        List<MatchDAO> matches = m.stream().map(match ->
+                new MatchDAO(
+                        match.puuid,
+                        match.region,
+                        match.id,
+                        match.assists,
+                        match.deaths,
+                        match.kills,
+                        match.startTimestamp
+                )
+        ).toList();
+        matchRepo.saveAll(matches);
+    }
+
+    @PostMapping("rotation/{platform}")
+    public void rotationPost(@PathVariable(value = "platform") String platform) {
+        List<ChampionDTO> c = client.getRotation(RestClient.PlatformHost.valueOf(platform));
+        List<ChampionDAO> champions = c.stream().map(champ -> new ChampionDAO(champ.name, champ.key)).toList();
+        rotationRepo.deleteAll();
+        rotationRepo.saveAll(champions);
     }
 }

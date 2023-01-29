@@ -7,5 +7,5 @@ import pjatk.s24271.jaz301.api.data.objects.ChampionDAO;
 
 @Repository
 @Table(name="rotation")
-public interface RotationRepository extends JpaRepository<ChampionDAO, String> {
+public interface RotationRepository extends JpaRepository<ChampionDAO, Long> {
 }
