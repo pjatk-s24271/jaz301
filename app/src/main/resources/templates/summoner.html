@@ -1,5 +1,23 @@
-<tbody xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<table>
     <tr>
-        <td th:text="${summoner.name}"></td>
+        <th>accountId</th>
+        <th>profileIconId</th>
+        <th>revisionDate</th>
+        <th>name</th>
+        <th>id</th>
+        <th>puuid</th>
+        <th>summonerLevel</th>
     </tr>
-</tbody>
+
+    <tr>
+        <td th:text="${summoner.accountId}"></td>
+        <td th:text="${summoner.profileIconId}"></td>
+        <td th:text="${summoner.revisionDate}"></td>
+        <td th:text="${summoner.name}"></td>
+        <td th:text="${summoner.id}"></td>
+        <td th:text="${summoner.puuid}"></td>
+        <td th:text="${summoner.summonerLevel}"></td>
+    </tr>
+</table>
+</html>

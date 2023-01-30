@@ -56,7 +56,7 @@ public class RiotRestClient {
     }
 
     //Get summoner by name
-    public SummonerDTO getSummoner(String name, PlatformHost host) {
+    public SummonerDTO getSummoner(PlatformHost host, String name) {
         String url = url(host, "/lol/summoner/v4/summoners/by-name/" + name);
         return rest.getForObject(url, SummonerDTO.class);
     }

@@ -17,21 +17,21 @@ public class RestClientController {
     RiotRestClient client;
 
     @GetMapping("summoner/{platform}/{name}")
-    public SummonerDTO summonerGet(@PathVariable(value = "name") String name, @PathVariable(value = "platform") String platform) {
-        return client.getSummoner(name, RiotRestClient.PlatformHost.valueOf(platform));
+    public SummonerDTO summonerGet(@PathVariable String platform, @PathVariable String name) {
+        return client.getSummoner(RiotRestClient.PlatformHost.valueOf(platform), name);
     }
 
     @GetMapping("match/{region}/{puuid}/{count}")
     public List<MatchDTO> matchGet(
-            @PathVariable(value = "region") String region,
-            @PathVariable(value = "puuid") String puuid,
-            @PathVariable(value = "count") int count
+            @PathVariable String region,
+            @PathVariable String puuid,
+            @PathVariable int count
     ) {
         return client.getMatches(RiotRestClient.RegionHost.valueOf(region), puuid, count);
     }
 
     @GetMapping("rotation/{platform}")
-    public List<ChampionDTO> rotationGet(@PathVariable(value = "platform") String platform) {
+    public List<ChampionDTO> rotationGet(@PathVariable String platform) {
         return client.getRotation(RiotRestClient.PlatformHost.valueOf(platform));
     }
 

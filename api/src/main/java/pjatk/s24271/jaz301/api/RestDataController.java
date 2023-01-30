@@ -34,7 +34,7 @@ public class RestDataController {
 
 
     @GetMapping("summoner/{puuid}")
-    public SummonerDTO summonerGet(@PathVariable("puuid") String puuid) {
+    public SummonerDTO summonerGet(@PathVariable String puuid) {
         List<SummonerDAO> list = summonerRepo.findByPuuid(puuid);
         if (list.isEmpty()) return null;
 
@@ -54,9 +54,9 @@ public class RestDataController {
 
     @GetMapping("match/{region}/{puuid}/{count}")
     public List<MatchDTO> matchGet(
-            @PathVariable(value = "region") String region,
-            @PathVariable(value = "puuid") String puuid,
-            @PathVariable(value = "count") int count) {
+            @PathVariable String region,
+            @PathVariable String puuid,
+            @PathVariable int count) {
         return matchRepo.getLast(region, puuid, count).stream().map(m ->
                 new MatchDTO(
                         m.puuid,
@@ -77,8 +77,8 @@ public class RestDataController {
     }
 
     @PostMapping("summoner/{platform}/{name}")
-    public void summonerPost(@PathVariable(value = "name") String name, @PathVariable(value = "platform") String platform) {
-        SummonerDTO s = client.getSummoner(name, RiotRestClient.PlatformHost.valueOf(platform));
+    public void summonerPost(@PathVariable String name, @PathVariable String platform) {
+        SummonerDTO s = client.getSummoner(RiotRestClient.PlatformHost.valueOf(platform), name);
         SummonerDAO summoner = new SummonerDAO(
                 s.accountId,
                 s.profileIconId,
@@ -93,9 +93,9 @@ public class RestDataController {
 
     @PostMapping("match/{region}/{puuid}/{count}")
     public void matchPost(
-            @PathVariable(value = "region") String region,
-            @PathVariable(value = "puuid") String puuid,
-            @PathVariable(value = "count") int count
+            @PathVariable String region,
+            @PathVariable String puuid,
+            @PathVariable int count
     ) {
         List<MatchDTO> m = client.getMatches(RiotRestClient.RegionHost.valueOf(region), puuid, count);
         List<MatchDAO> matches = m.stream().map(match ->
@@ -113,7 +113,7 @@ public class RestDataController {
     }
 
     @PostMapping("rotation/{platform}")
-    public void rotationPost(@PathVariable(value = "platform") String platform) {
+    public void rotationPost(@PathVariable String platform) {
         List<ChampionDTO> c = client.getRotation(RiotRestClient.PlatformHost.valueOf(platform));
         List<ChampionDAO> champions = c.stream().map(champ -> new ChampionDAO(champ.name, champ.key)).toList();
         rotationRepo.deleteAll();

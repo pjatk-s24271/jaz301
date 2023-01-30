@@ -1,5 +1,22 @@
-<tbody xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<table>
+    <tr>
+        <th>puuid</th>
+        <th>region</th>
+        <th>id</th>
+        <th>assists</th>
+        <th>deaths</th>
+        <th>kills</th>
+        <th>startTimestamp</th>
+    </tr>
     <tr th:each="match : ${matches}">
+        <td th:text="${match.puuid}"></td>
+        <td th:text="${match.region}"></td>
+        <td th:text="${match.id}"></td>
+        <td th:text="${match.assists}"></td>
+        <td th:text="${match.deaths}"></td>
+        <td th:text="${match.kills}"></td>
         <td th:text="${match.startTimestamp}"></td>
     </tr>
-</tbody>
+</table>
+</html>

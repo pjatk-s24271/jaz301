@@ -31,8 +31,8 @@ public class RestClient {
         ).getBody();
     }
 
-    public SummonerDTO getSummoner(String puuid) {
-        return rest.getForObject(url + "api/data/summoner/" + puuid, SummonerDTO.class);
+    public SummonerDTO getSummoner(String host, String name) {
+        return rest.getForObject(url + "api/client/summoner/" + host + '/' + name, SummonerDTO.class);
     }
 
     public List<ChampionDTO> getRotation() {

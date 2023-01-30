@@ -27,9 +27,9 @@ public class Controller {
         return "matches";
     }
 
-    @GetMapping("summoner/{puuid}")
-    public String summoner(@PathVariable String puuid, Model model) {
-        model.addAttribute("summoner", client.getSummoner(puuid));
+    @GetMapping("summoner/{platform}/{name}")
+    public String summoner(@PathVariable String platform, @PathVariable String name, Model model) {
+        model.addAttribute("summoner", client.getSummoner(platform, name));
         return "summoner";
     }
 }
