@@ -8,9 +8,9 @@ import pjatk.s24271.jaz301.api.data.SummonerRepository;
 import pjatk.s24271.jaz301.api.data.objects.ChampionDAO;
 import pjatk.s24271.jaz301.api.data.objects.MatchDAO;
 import pjatk.s24271.jaz301.api.data.objects.SummonerDAO;
-import pjatk.s24271.jaz301.api.objects.ChampionDTO;
-import pjatk.s24271.jaz301.api.objects.MatchDTO;
-import pjatk.s24271.jaz301.api.objects.SummonerDTO;
+import pjatk.s24271.jaz301.api.dto.ChampionDTO;
+import pjatk.s24271.jaz301.api.dto.MatchDTO;
+import pjatk.s24271.jaz301.api.dto.SummonerDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class RestDataController {
     MatchRepository matchRepo;
 
     @Autowired
-    RestClient client;
+    RiotRestClient client;
 
 
     @GetMapping("summoner/{puuid}")
@@ -78,7 +78,7 @@ public class RestDataController {
 
     @PostMapping("summoner/{platform}/{name}")
     public void summonerPost(@PathVariable(value = "name") String name, @PathVariable(value = "platform") String platform) {
-        SummonerDTO s = client.getSummoner(name, RestClient.PlatformHost.valueOf(platform));
+        SummonerDTO s = client.getSummoner(name, RiotRestClient.PlatformHost.valueOf(platform));
         SummonerDAO summoner = new SummonerDAO(
                 s.accountId,
                 s.profileIconId,
@@ -97,7 +97,7 @@ public class RestDataController {
             @PathVariable(value = "puuid") String puuid,
             @PathVariable(value = "count") int count
     ) {
-        List<MatchDTO> m = client.getMatches(RestClient.RegionHost.valueOf(region), puuid, count);
+        List<MatchDTO> m = client.getMatches(RiotRestClient.RegionHost.valueOf(region), puuid, count);
         List<MatchDAO> matches = m.stream().map(match ->
                 new MatchDAO(
                         match.puuid,
@@ -114,7 +114,7 @@ public class RestDataController {
 
     @PostMapping("rotation/{platform}")
     public void rotationPost(@PathVariable(value = "platform") String platform) {
-        List<ChampionDTO> c = client.getRotation(RestClient.PlatformHost.valueOf(platform));
+        List<ChampionDTO> c = client.getRotation(RiotRestClient.PlatformHost.valueOf(platform));
         List<ChampionDAO> champions = c.stream().map(champ -> new ChampionDAO(champ.name, champ.key)).toList();
         rotationRepo.deleteAll();
         rotationRepo.saveAll(champions);

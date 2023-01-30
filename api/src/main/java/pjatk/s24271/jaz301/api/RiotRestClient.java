@@ -9,17 +9,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import pjatk.s24271.jaz301.api.objects.*;
-import pjatk.s24271.jaz301.api.objects.MatchRiotDTO.InfoDto.ParticipantDto;
+import pjatk.s24271.jaz301.api.dto.*;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static pjatk.s24271.jaz301.api.RestClient.PlatformHost.*;
-import static pjatk.s24271.jaz301.api.RestClient.RegionHost.*;
+import static pjatk.s24271.jaz301.api.RiotRestClient.PlatformHost.*;
+import static pjatk.s24271.jaz301.api.RiotRestClient.RegionHost.*;
 
 @Component
-public class RestClient {
+public class RiotRestClient {
     RestTemplate rest;
 
     String apiKey = "";
@@ -50,7 +50,7 @@ public class RestClient {
         platforms.put(VN2, "vn2.api.riotgames.com");
     }
 
-    public RestClient() {
+    public RiotRestClient() {
         RestTemplateBuilder builder = new RestTemplateBuilder();
         this.rest = builder.build();
     }
@@ -79,7 +79,7 @@ public class RestClient {
                 MatchRiotDTO match = rest.getForObject(url, MatchRiotDTO.class);
                 if (match == null) continue;
 
-                ParticipantDto participant = match.info.participants.stream().filter(p ->
+                MatchRiotDTO.InfoDto.ParticipantDto participant = match.info.participants.stream().filter(p ->
                         Objects.equals(p.puuid, puuid)
                 ).toList().get(0);
 
@@ -157,7 +157,7 @@ public class RestClient {
         return builder.build().toUriString();
     }
 
-    enum PlatformHost {BR1, EUN1, EUW1, JP1, KR, LA1, LA2, NA1, OC1, TR1, RU, PH2, SG2, TH2, TW2, VN2}
+    public enum PlatformHost {BR1, EUN1, EUW1, JP1, KR, LA1, LA2, NA1, OC1, TR1, RU, PH2, SG2, TH2, TW2, VN2}
 
-    enum RegionHost {AMERICAS, ASIA, EUROPE, SEA}
+    public enum RegionHost {AMERICAS, ASIA, EUROPE, SEA}
 }

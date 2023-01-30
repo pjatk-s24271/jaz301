@@ -1,0 +1,6 @@
+plugins {
+    id 'java'
+}
+
+version = '0.0.1'
+group = 'pjatk.s24271.jaz301.api.dto'

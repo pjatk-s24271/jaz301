@@ -1,4 +1,4 @@
-package pjatk.s24271.jaz301.api.objects;
+package pjatk.s24271.jaz301.api.dto;
 
 public class ChampionDTO {
     public String name;

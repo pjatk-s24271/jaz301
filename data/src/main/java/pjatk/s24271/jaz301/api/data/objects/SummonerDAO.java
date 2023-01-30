@@ -1,14 +1,13 @@
 package pjatk.s24271.jaz301.api.data.objects;
 
 import jakarta.persistence.*;
-
 import java.math.BigInteger;
 
 @Entity
 @Table(name = "summoner")
 public class SummonerDAO {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long idd;
     public String accountId;
     public Integer profileIconId;

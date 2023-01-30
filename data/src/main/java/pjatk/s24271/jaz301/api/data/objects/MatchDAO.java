@@ -2,8 +2,6 @@ package pjatk.s24271.jaz301.api.data.objects;
 
 import jakarta.persistence.*;
 
-import java.math.BigInteger;
-
 @Entity
 @Table(name = "match")
 public class MatchDAO {
