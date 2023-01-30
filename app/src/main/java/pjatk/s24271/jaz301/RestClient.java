@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class RestClient {
     RestTemplate rest;
-    String url = "https://alteratom.com:8080/";
+    String url = "https://alteratom.com:8443/";
 
     public RestClient() {
         RestTemplateBuilder builder = new RestTemplateBuilder();
