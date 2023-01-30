@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/data/")
+@RequestMapping("/data/")
 public class RestDataController {
 
     @Autowired

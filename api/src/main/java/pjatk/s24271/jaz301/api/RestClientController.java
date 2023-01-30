@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/client/")
+@RequestMapping("/client/")
 public class RestClientController {
 
     @Autowired
